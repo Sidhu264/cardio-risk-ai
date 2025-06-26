@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Cardio-Care</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0e6ff 0%, #f0f2f5 100%);            
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signup-container {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .signup-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .signup-container h1 {
+            color: #202940;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .signup-container p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            color: #344767;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            padding: 0.75rem;
+            border: 2px solid #e0e6ff;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: #ffffff;
+        }
+
+        .input-group input:focus {
+            border-color: #1A73E8;
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+        }
+
+        .signup-button {
+            background: #1A73E8;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(26, 115, 232, 0.2);
+        }
+
+        .signup-button:hover {
+            background: #1557b0;
+            box-shadow: 0 6px 8px rgba(26, 115, 232, 0.3);
+        }
+
+        .signup-button:active {
+            transform: translateY(1px);
+        }
+
+        .login-link {
+            margin-top: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .login-link a {
+            color: #1A73E8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .signup-container h1 {
+                font-size: 1.5rem;
+            }
+
+            .signup-container p {
+                font-size: 0.8rem;
+            }
+
+            .input-group input {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .signup-button {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .login-link {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        
+        <h1>Create an Account</h1>
+        <p>Join Cardio-Care to get started.</p>
+        <form class="signup-form" action="/signup" method="POST">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+            </div>
+            <button type="submit" class="signup-button">Sign Up</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="{{ url_for('login') }}">Login</a>
+        </div>
+    </div>
+</body>
+</html>

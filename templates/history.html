@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Results</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reuse the same styles from the dashboard */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #202940;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            width: 250px;
+            left: 0;
+            top: 0;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            background-color: #1A73E8;
+            color: white;
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            min-width: 200px;
+        }
+
+        /* Table Styles */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results-table th {
+            background-color: #1A73E8;
+            color: white;
+            font-weight: 600;
+        }
+
+        .results-table tr:hover {
+            background-color: #f0f2f5;
+        }
+
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 767px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                width: 250px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .logo-text,
+            .nav-item span {
+                display: inline;
+            }
+            .nav-item {
+                justify-content: flex-start;
+                padding: 0.75rem 1rem;
+            }
+            .results-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        @media (max-width: 767px) {
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+
+        .nav-item.back-button {
+            margin-top: auto;  /* This will push it to the bottom */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            color: #fff;
+        }
+    
+        .nav-item.back-button:hover {
+            background-color: #1A73E8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-heartbeat medical-icon"></i>
+            <span class="logo-text">Cardio-Care</span>
+        </div>
+        <nav class="nav-list">
+            <a href="{{ url_for('dashboard') }}" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('results') }}" class="nav-item active">
+                <i class="fas fa-table"></i>
+                <span>Past Results</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="nav-item back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sign Out</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="breadcrumb">
+                <i class="fas fa-home"></i>
+                <span>/</span>
+                <span>Past Results</span>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search here" class="search-input">
+                <i class="fas fa-user"></i>
+                <i class="fas fa-cog"></i>
+                <i class="fas fa-bell"></i>
+            </div>
+        </header>
+
+        <!-- Table to Display Past Results -->
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Systolic BP</th>
+                    <th>Diastolic BP</th>
+                    <th>BMI</th>
+                    <th>HbA1c</th>
+                    <th>Age</th>
+                    <th>Risk Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in past_results %}
+                <tr>
+                    <td>{{ result[1] }}</td>
+                    <td>{{ result[2] }} mmHg</td>
+                    <td>{{ result[3] }} mmHg</td>
+                    <td>{{ result[4] }} kg/m²</td>
+                    <td>{{ result[5] }}%</td>
+                    <td>{{ result[6] }}</td>
+                    <td>{{ result[7] }}%</td>
+                    <td>{{ result[8] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

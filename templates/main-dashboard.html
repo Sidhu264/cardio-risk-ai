@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardio-Care Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            background-color: #202940;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            width: 250px;
+            left: 0;
+            top: 0;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            background-color: #1A73E8;
+            color: white;
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            min-width: 200px;
+        }
+
+        .input-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .input-section h2 {
+            color: #344767;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: #344767;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input[type="text"]:focus {
+            border-color: #1A73E8;
+            outline: none;
+        }
+
+        .image-upload-container {
+            border: 2px dashed #1A73E8;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-container:hover {
+            background: #f0f7ff;
+        }
+
+        .image-upload-container i {
+            font-size: 2rem;
+            color: #1A73E8;
+            margin-bottom: 1rem;
+        }
+
+        .image-upload-container p {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .upload-btn {
+            background: #1A73E8;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .upload-btn:hover {
+            background: #1557b0;
+        }
+
+        /* New Check Deficiency Button Styles */
+        .check-deficiency-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .check-deficiency-btn {
+            background: #202940;
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .check-deficiency-btn:hover {
+            background: #2c3a57;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .check-deficiency-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .check-deficiency-btn i {
+            margin-right: 0.5rem;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: none;
+            border: none;
+            color: #344767;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                width: 80px;
+            }
+            .main-content {
+                margin-left: 80px;
+            }
+            .logo-text,
+            .nav-item span {
+                display: none;
+            }
+            .nav-item {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+            .nav-item i {
+                margin: 0;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                width: 250px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .logo-text,
+            .nav-item span {
+                display: inline;
+            }
+            .nav-item {
+                justify-content: flex-start;
+                padding: 0.75rem 1rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .search-bar {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .search-input {
+                flex: 1;
+            }
+            .check-deficiency-btn {
+                width: 100%;
+                padding: 0.875rem 1.5rem;
+            }
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        @media (max-width: 767px) {
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            display: none; /* Initially hidden */
+        }
+
+        .image-upload-container.has-image {
+            padding: 1rem; /* Reduce padding when image is displayed */
+        }
+
+        .image-upload-container.has-image i,
+        .image-upload-container.has-image p,
+        .image-upload-container.has-image .upload-btn {
+            display: none; /* Hide upload elements when image is displayed */
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-heartbeat medical-icon"></i>
+            <span class="logo-text">Cardio-Care</span>
+        </div>
+        <nav class="nav-list">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('results') }}" class="nav-item">
+                <i class="fas fa-table"></i>
+                <span>Past Results</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sign Out</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="breadcrumb">
+                <i class="fas fa-home"></i>
+                <span>/</span>
+                <span>Dashboard</span>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search here" class="search-input">
+                <i class="fas fa-user"></i>
+                <i class="fas fa-cog"></i>
+                <i class="fas fa-bell"></i>
+            </div>
+        </header>
+
+        <!-- Form to submit patient name and retinal image -->
+<form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 2rem;">
+
+    <!-- Patient Information Section -->
+    <section class="input-section">
+        <h2>Patient Information</h2>
+        <div class="input-group">
+            <label for="patient-name">Patient Name</label>
+            <input type="text" id="patient-name" name="name" placeholder="Enter patient's full name" required>
+        </div>
+    </section>
+
+    <!-- Retinal Image Upload Section -->
+    <section class="input-section">
+        <h2>Retinal Image Upload</h2>
+        <div class="image-upload-container" onclick="document.getElementById('retinal-image').click()">
+            <i class="fas fa-upload"></i>
+            <p>Drag and drop your retinal image here</p>
+            <p>or</p>
+            <button type="button" class="upload-btn">Choose File</button>
+            <input type="file" id="retinal-image" name="image" hidden accept="image/*" required onchange="handleImageUpload(event)">
+            <!-- Image Preview -->
+            <img id="image-preview" class="image-preview" alt="Retinal Image Preview">
+        </div>
+    </section>
+
+    <!-- Submit Button with 3D Hover Effect -->
+    <div class="check-deficiency-container">
+        <button type="submit" class="check-deficiency-btn">
+            <i class="fas fa-search"></i>
+            Check Deficiency
+        </button>
+    </div>
+
+</form>
+
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            const imagePreview = document.getElementById('image-preview');
+            const uploadContainer = document.querySelector('.image-upload-container');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Display the uploaded image
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+
+                    // Add a class to the container to adjust its styling
+                    uploadContainer.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Hide the image preview if no file is selected
+                imagePreview.style.display = 'none';
+                uploadContainer.classList.remove('has-image');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #202940;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            width: 250px;
+            left: 0;
+            top: 0;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            background-color: #1A73E8;
+            color: white;
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            min-width: 200px;
+        }
+
+        /* Stats Grid - Modified for single line on PC */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .stat-title {
+            color: #344767;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #344767;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Charts Grid - Modified for 2+1 layout */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .charts-grid .chart-card:last-child {
+            grid-column: 1 / -1;
+        }
+
+        .chart-card {
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            color: #344767;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .chart-subtitle {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .chart-update {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: none;
+            border: none;
+            color: #344767;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-grid .chart-card:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                width: 80px;
+            }
+            .main-content {
+                margin-left: 80px;
+            }
+            .logo-text,
+            .nav-item span {
+                display: none;
+            }
+            .nav-item {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+            .nav-item i {
+                margin: 0;
+                font-size: 1.2rem;
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .charts-grid .chart-card:last-child {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                width: 250px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .logo-text,
+            .nav-item span {
+                display: inline;
+            }
+            .nav-item {
+                justify-content: flex-start;
+                padding: 0.75rem 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .search-bar {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .search-input {
+                flex: 1;
+            }
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        @media (max-width: 767px) {
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+
+        .nav-item.back-button {
+            margin-top: auto;  /* This will push it to the bottom */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            color: #fff;
+        }
+    
+        .nav-item.back-button:hover {
+            background-color: #1A73E8;
+            color: white;
+        }
+
+        .print-button-container {
+            margin: 2rem 0;
+        }
+        
+        .print-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #202940;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .print-button:hover {
+            background: #2c3a57;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .print-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-heartbeat medical-icon"></i>
+            <span class="logo-text">Cardio-Care</span>
+        </div>
+        <nav class="nav-list">
+            <a href="{{ url_for('dashboard') }}" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('results') }}" class="nav-item">
+                <i class="fas fa-table"></i>
+                <span>Past Results</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="nav-item">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sign Out</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="breadcrumb">
+                <i class="fas fa-home"></i>
+                <span>/</span>
+                <span>Result Dashboard</span>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search here" class="search-input">
+                <i class="fas fa-user"></i>
+                <i class="fas fa-cog"></i>
+                <i class="fas fa-bell"></i>
+            </div>
+        </header>
+
+        <!-- Stats Cards with Theme-Consistent Colors -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #344767;"><i class="fas fa-heart"></i></div>
+                <div class="stat-title"><b>Risk Score</b></div>
+                <div class="stat-value">{{ risk_score }}%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #1A73E8;"><i class="fas fa-heartbeat"></i></div>
+                <div class="stat-title"><b>Systolic BP</b></div>
+                <div class="stat-value">{{ sbp }} mmHg</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #4CAF50;"><i class="fas fa-stethoscope"></i></div>
+                <div class="stat-title"><b>Diastolic BP</b></div>
+                <div class="stat-value">{{ dbp }} mmHg</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #E91E63;"><i class="fas fa-calendar-alt"></i></div>
+                <div class="stat-title"><b>Age</b></div>
+                <div class="stat-value">{{ age }} years</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #d61e11;"><i class="fas fa-weight"></i></div>
+                <div class="stat-title"><b>BMI</b></div>
+                <div class="stat-value">{{ bmi }} kg/m2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #1d1a36;"><i class="fas fa-vial"></i></div>
+                <div class="stat-title"><b>Hemoglobin A1C (HbA1c)</b></div>
+                <div class="stat-value">{{ hba1c }}%</div>
+            </div>
+        </div>
+        
+        <!-- Charts with 2+1 Layout -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">User's Metrics Graph</div>
+                <img src="data:image/png;base64,{{ graph1 }}" alt="User Metrics Graph" width="100%">
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Comparison Graph - User vs Ideal</div>
+                <img src="data:image/png;base64,{{ graph2 }}" alt="Comparison Graph" width="100%">
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Precautions</div>
+                <p>{{ precautions | safe }}</p>
+            </div>
+        </div>
+            
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
